@@ -6,3 +6,4 @@ export { default as AttachWithMultipleAttrs } from './AttachWithMultipleAttrs.sv
 export { default as AttachWithFunctionCall } from './AttachWithFunctionCall.svelte'
 export { default as EachDestructuringWithDefault } from './EachDestructuringWithDefault.svelte'
 export { default as EachAsConst } from './EachAsConst.svelte'
+export { default as SnippetWithTypedDestructuring } from './SnippetWithTypedDestructuring.svelte'
