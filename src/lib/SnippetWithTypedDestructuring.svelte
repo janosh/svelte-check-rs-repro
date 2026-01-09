@@ -32,8 +32,8 @@
 
 <div>
   {@render user_content({
-    x_scale: (n) => n * 100,
-    y_scale: (n) => n * 50,
+    x_scale: (n: number) => n * 100,
+    y_scale: (n: number) => n * 50,
     width: 400,
     height: 300,
     padding: { top: 10, left: 20 },
