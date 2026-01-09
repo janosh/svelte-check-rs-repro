@@ -1,42 +1,29 @@
 # svelte-check-rs Minimal Reproduction
 
-Minimal reproduction repo for svelte-check-rs parsing issues.
+Minimal reproduction repo for [svelte-check-rs#46](https://github.com/pheuter/svelte-check-rs/issues/46).
 
-## Progress Summary 🎉
+## Status
 
-| Version | Errors on [matterviz](https://github.com/janosh/matterviz) | Status |
-|---------|-------------------------------------------------------------|--------|
-| v0.5.4 | 154 | - |
-| v0.5.5 | 46 | 70% ↓ |
-| v0.5.6 | 4 | 97% ↓ |
-| **v0.6.1** | **3*** | **98% ↓** |
+✅ **Fixed in v0.6.2** - All issues from #46 are resolved.
 
-*3 remaining errors are line number calculation issues on large files (errors reported on lines beyond file length)
+## Historical Issues (Fixed)
 
-## All Reproductions Now Pass in v0.6.1! ✅
-
-| File | Issue | Status |
-|------|-------|--------|
-| `SnippetWithComplexConst.svelte` | `{@const}` with regex | ✅ Fixed |
-| `ConstWithArrowAndIIFE.svelte` | `{@const}` with arrow functions | ✅ Fixed |
-| `EachDestructuringWithDefault.svelte` | `{#each}` destructuring defaults | ✅ Fixed |
-| `EachAsConst.svelte` | `as const` with defaults | ✅ Fixed |
-| `AttachDirective.svelte` | `{@attach}` directive | ✅ Works |
-| `AttachWithFunctionCall.svelte` | `{@attach fn()}` | ✅ Works |
-| `SnippetWithTypedDestructuring.svelte` | Typed snippet params | ✅ Fixed |
-| `CssKeyframes.svelte` | `@keyframes` in CSS | ✅ Works |
+| File                             | Issue                                                                        | Status |
+| -------------------------------- | ---------------------------------------------------------------------------- | ------ |
+| `SnippetWithComplexConst.svelte` | `{#snippet}` with complex `{@const}` (regex, destructuring, method chaining) | ✅ Fixed |
+| `ConstWithArrowAndIIFE.svelte`   | `{@const}` with typed arrow functions and IIFE                               | ✅ Fixed |
 
 ## Reproduce
 
 ```bash
 pnpm install
-node node_modules/svelte-check-rs/install.js
 pnpm check     # svelte-check
 pnpm check:rs  # svelte-check-rs
 ```
 
+Both commands now report 0 errors with v0.6.2.
+
 ## Environment
 
-- svelte-check-rs: 0.6.1
-- svelte-check: 4.3.5
+- svelte-check-rs: 0.6.2
 - svelte: 5.46.1
