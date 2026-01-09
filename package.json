@@ -1,7 +1,7 @@
 {
   "name": "svelte-check-rs-repro",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "scripts": {
     "dev": "vite dev",
@@ -13,13 +13,13 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^7.0.0",
-    "@sveltejs/kit": "^2.49.1",
-    "@sveltejs/vite-plugin-svelte": "^6.2.1",
-    "svelte": "^5.45.6",
-    "svelte-check": "^4.3.4",
-    "svelte-check-rs": "0.5.4",
+    "@sveltejs/kit": "^2.49.4",
+    "@sveltejs/vite-plugin-svelte": "^6.2.3",
+    "svelte": "^5.46.1",
+    "svelte-check": "^4.3.5",
+    "svelte-check-rs": "0.5.5",
     "typescript": "^5.9.3",
-    "vite": "^7.2.6"
+    "vite": "^7.3.1"
   },
   "pnpm": {
     "allowBuilds": [
