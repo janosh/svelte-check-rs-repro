@@ -1,6 +1,6 @@
 # svelte-check-rs Minimal Reproduction
 
-Minimal reproduction repo for [svelte-check-rs#46](https://github.com/pheuter/svelte-check-rs/issues/46) and related Svelte 5 parsing issues.
+Minimal reproduction repo for [svelte-check-rs#46](https://github.com/pheuter/svelte-check-rs/issues/46), [#52](https://github.com/pheuter/svelte-check-rs/issues/52), and related Svelte 5 parsing issues.
 
 ## Issues
 
@@ -8,12 +8,12 @@ Each file in `src/lib/` reproduces a specific parsing issue:
 
 | File | Issue | svelte-check | svelte-check-rs v0.5.5 |
 |------|-------|--------------|------------------------|
-| `SnippetWithComplexConst.svelte` | `{#snippet}` with complex `{@const}` (regex, destructuring, method chaining) | ✅ | ✅ Fixed |
+| `SnippetWithComplexConst.svelte` | `{#snippet}` with complex `{@const}` (regex, method chaining) | ✅ | ✅ Fixed |
 | `ConstWithArrowAndIIFE.svelte` | `{@const}` with typed arrow functions and IIFE | ✅ | ✅ Fixed |
 | `AttachDirective.svelte` | `{@attach}` directive (Svelte 5) | ✅ | ✅ |
-| `AttachWithMultipleAttrs.svelte` | Multiple `{@attach}` directives | ✅ | ⚠️ Implicit any |
 | `AttachWithFunctionCall.svelte` | `{@attach fn()}` with function calls | ✅ | ✅ |
-| `EachDestructuringWithDefault.svelte` | **NEW** `{#each}` with destructuring & default values | ✅ | ❌ Fails |
+| `EachDestructuringWithDefault.svelte` | `{#each}` with destructuring & default values ([#52](https://github.com/pheuter/svelte-check-rs/issues/52)) | ✅ | ❌ Fails |
+| `EachAsConst.svelte` | **NEW** `{#each array as const as [name, opts = {}]}` | ✅ | ❌ Fails |
 
 ## Reproduce
 
@@ -28,42 +28,36 @@ pnpm check:rs  # svelte-check-rs fails ❌
 
 Both commands should report 0 errors.
 
-## Error Output (v0.5.5)
+## Bug Details
 
-```
-src/lib/EachDestructuringWithDefault.svelte:34:47
-Error: Property or signature expected. (ts(TS1131))
+### Issue 1: `{#each}` with destructuring default values (#52)
 
-src/lib/EachDestructuringWithDefault.svelte:62:1
-Error: Declaration or statement expected. (ts(TS1128))
-```
-
-## Analysis
-
-### Issue: `{#each}` with complex destructuring patterns
-
-The parser fails on multi-line `{#each}` blocks that combine:
-1. Inline filter function calls
-2. Destructuring with default values (`{ foo = default_value }`)
-3. Key expressions on separate lines
-
-Example that fails:
+Multi-line `{#each}` blocks with destructuring that includes default values fail to parse:
 
 ```svelte
-{#each data.filter((itm) =>
-    itm.value !== null
-  ) as
+{#each data.filter((x) => x.value) as
   { title, value, fmt = default_fmt }
-  (title + value)
+  (title)
 }
   ...
 {/each}
 ```
 
-### Previously Fixed (v0.5.5)
+### Issue 2: `as const` with destructuring default values (NEW)
 
-- Regex literals in `{@const}` expressions
-- Complex method chaining in `{@const}`
+`{#each}` using TypeScript's `as const` assertion combined with destructuring that has default values:
+
+```svelte
+<!-- PASSES: as const without defaults -->
+{#each [[`a`, 1]] as const as [name, val] (name)}
+
+<!-- FAILS: as const WITH defaults -->
+{#each [[`a`, 1, {}]] as const as [name, val, opts = {}] (name)}
+```
+
+The `as const` assertion alone works fine. The bug is triggered when combining:
+1. `as const` assertion
+2. Destructuring with default values (`opts = {}`)
 
 ## Environment
 
